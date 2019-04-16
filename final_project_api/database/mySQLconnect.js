@@ -5,9 +5,9 @@ let connection = mysql.createConnection({
 
 	host: 'localhost',
 	port: 3306,
-	user: 'cs386_phernand',
-	password:'he5223',
-	database: 'cs386_phernand'
+	user: 'sql user name',
+	password:'sql password',
+	database: 'sql user name'
 });
 
 module.exports = connection;
