@@ -1,28 +1,49 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Route, Link} from 'react-router-dom';
+import Table from './Table';
+import Axios from './ConfigAxios';
+
+const Home = () => (<h2>Home</h2>);
+// const Advisors = () => (
+//     <h2>Advisors</h2>
+//     <Table titles={titles} attributes={attributes} />
+// );
+
+const titles = ['Dessert (100g serving)', 'Calories', 'Fat (g)', 'Carbs (g)', 'Protein (g)'];
+const attributes = ['name', 'calories', 'fat', 'carbs', 'protein'];
+
+class Advisors extends Component {
+    render() {
+        return (
+            <div>
+                <h2>Advisors</h2>
+                <Table titles={titles} attributes={attributes} />
+            </div>
+        );
+    }
+
+}
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+    componentDidMount() {
+        Axios.get('advisor').then(result =>
+            console.log(result.data));
+    }
+
+    render() {
+        return (
+            <div className="App">
+            <ol>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/advisors">Advisors</Link></li>
+            </ol>
+
+            <Route exact path={"/"} component={Home}/>
+            <Route path={"/advisors"} component={Advisors}/>
+            </div>
     );
-  }
+    }
 }
 
 export default App;
