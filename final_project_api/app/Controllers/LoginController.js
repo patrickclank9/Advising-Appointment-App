@@ -8,8 +8,7 @@ class LoginController {
                 console.log('about to return because user input contains non-digit characters..');
                 return reject("Incorrect login credentials.");
             }
-            let query = "SELECT * FROM users WHERE admin_id = ?";
-	        console.log('About to run this query.', query);
+            let query = "SELECT * FROM users WHERE user_id = ?";
 	        console.log('ctx.params.user_id is', ctx.params.user_id);
             dbConnection.query(
                 {
@@ -37,6 +36,29 @@ class LoginController {
                 user: null
             };
         });
+    }
+
+    async userTypes(ctx) {
+        return new Promise((resolve, reject) => {
+            let query = `
+                SELECT user_id, advisor
+                FROM users;
+            `;
+            dbConnection.query({
+                sql: query,
+                values: []
+            }, (error, tuples) => {
+                if (error) {
+                    console.log("Connection error in LoginController::userType", error);
+                    ctx.body = [];
+                    ctx.status = 200;
+                    return reject(error);
+                }
+                ctx.body = tuples;
+                ctx.status = 200;
+                return resolve();
+            });
+        }).catch(err => console.log("Database connection error.", err));
     }
 }
 

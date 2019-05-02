@@ -3,8 +3,18 @@ import './App.css';
 import {Route, Link} from 'react-router-dom';
 import Table from './Table';
 import Axios from './ConfigAxios';
+import Login from "./Login";
 
-const Home = () => (<h2>Home</h2>);
+class Home extends Component {
+    render() {
+        return (
+            <div>
+                <h2>Home</h2>
+                <Login/>
+            </div>
+        );
+    }
+}
 
 class Advisors extends Component {
     constructor(){
