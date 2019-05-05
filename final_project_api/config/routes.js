@@ -47,6 +47,14 @@ advisorRouter.get('/:id', Authorize('admin'),
     AdvisorController.advisorWithID,
     err => console.log(`allAdvisors ran into an error: ${err}`));
 
+advisorRouter.get('/getSessions/:id', Authorize('admin'),
+    AdvisorController.getSessionsForAdvisor,
+    err => console.log(`getSessionsForAdvisor ran into an error: ${err}`));
+
+advisorRouter.post('/add_appt_entry',
+    AdvisorController.addOpenSession,
+    err => console.log(`addOpenSession ran into an error: ${err}`));
+
 
 
 const AdviseeController = new (require('../app/Controllers/AdviseeController.js'))();
@@ -56,6 +64,13 @@ const adviseeRouter = require('koa-router')({
 adviseeRouter.get('/', Authorize('admin'),
     AdviseeController.allAdvisees,
     err => console.log(`allAdvisees ran into an error: ${err}`));
+
+adviseeRouter.get('/openSessions', Authorize('admin'),
+    AdviseeController.getOpenSessions,
+    err => console.log(`getOpenSessions ran into an error: ${err}`));
+
+
+
 
 
 router.use(

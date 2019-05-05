@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Route, Link, Redirect} from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom'
 import Axios from "./ConfigAxios";
 
 const styles = theme => ({
@@ -25,13 +25,19 @@ const styles = theme => ({
 	},
 });
 
+
+const User_Type_Enum = { ADVISOR: 'advisor', ADVISEE: 'advisee', NOTHING: '' };
 class Login extends React.Component {
 	constructor(){
 		super();
 		this.state = {
 			loginID: '',
+			userType: User_Type_Enum.NOTHING,
+			redirect: false,
 			type: {},
 		};
+		this.handleChange = this.handleChange.bind(this);
+		this.handleLogin = this.handleLogin.bind(this);
 	}
 
 	componentDidMount() {
@@ -40,8 +46,54 @@ class Login extends React.Component {
 		});
 	}
 
-	handleChange = name => event => {
-		this.setState({ [name]: event.target.loginID });
+	handleChange = (name) => (event) => {
+		this.setState({
+			[name]: event.target.value,
+			redirect: false
+		});
+	};
+
+	handleLogin = () => {
+		let isAdvisor = false;
+		let isAdvisee = false;
+		this.state.type.forEach((value)=> {
+			if(value.user_id === this.state.loginID)
+				switch (value.advisor.data[0]) {
+					case 1:
+						isAdvisor = true;
+						break;
+					case 0:
+						isAdvisee = true;
+						break;
+				}
+		});
+		let usertype = User_Type_Enum.NOTHING;
+		if(isAdvisor)
+			usertype = User_Type_Enum.ADVISOR;
+		else if(isAdvisee)
+			usertype = User_Type_Enum.ADVISEE;
+
+
+		this.setState({
+			redirect: true,
+			userType: usertype,
+		})
+	};
+
+	renderRedirect = () => {
+		if (this.state.redirect) {
+			let link = '/';
+			if(this.state.userType === User_Type_Enum.ADVISOR){
+				link += 'advisor'
+			} else if(this.state.userType === User_Type_Enum.ADVISEE){
+				link += 'advisee'
+			} else {
+				alert('Not a valid ID!');
+				return;
+			}
+			link += `/${this.state.loginID}`;
+			return <Redirect to={link} />
+		}
 	};
 
 	render() {
@@ -59,7 +111,8 @@ class Login extends React.Component {
 					className={classes.textField}
 					margin="normal"
 				/>
-				<Button variant="contained" className={classes.button}>Login</Button>
+				{this.renderRedirect()}
+				<Button variant="contained" className={classes.button} onClick={this.handleLogin}>Login</Button>
 			</form>
 		);
 	}

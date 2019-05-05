@@ -7,6 +7,7 @@ const AxiosConfig = () => {
     // Set the baseURL for all requests to the API domain instead of the current domain
     // Use your API's port number in place of 8090.
     axios.defaults.baseURL = `http://cs.sonoma.edu:8066/api/v1`;
+    //axios.defaults.baseURL = `http://127.0.0.1:8066/api/v1`;
 
 
     // Allow the browser to send cookies to the API domain (which include auth_token)
